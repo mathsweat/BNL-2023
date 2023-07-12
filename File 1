@@ -38,3 +38,180 @@ plt.imshow(data_log) #this graph seems to have no use. This being said, I am not
 
 #CELL 5
 plt.plot(data_log[0,:])
+
+
+
+
+
+#I need to find how to find peaks, but matplotlib can't find them with some function for some reason.
+#CELL 6
+np_data_log=np.array(data_log)
+np_data_log
+
+
+
+#CELL 7
+np_data_log.shape #(rows by columns)
+print(np_data_log.max())
+print(np_data_log.min())
+#print("Maximum Index position: ",np_data_log.index(max(np_data_log))) 
+
+
+
+#CELL 8
+#assuming no repeat at same max or min, these give the location in the array for the absolute extremas.
+target=np_data_log.max()
+for i in range(len(np_data_log)):
+    for j in range(len(np_data_log[i])):
+        if (np_data_log[i][j] == target):
+            print("max index: "+str(i)+", "+str(j)) #won't let me return anything??? I can print though
+
+
+
+#CELL 9
+target2=np_data_log.min()
+for i in range(len(np_data_log)):
+    for j in range(len(np_data_log[i])):
+        if (np_data_log[i][j] == target2):
+            print("min index: "+str(i)+", "+str(j))
+            #WHAT IS WRONG WITH THIS CODE?????
+
+
+
+
+
+#Basic image plotting and colormapping
+#CELL 10
+img2 = np.asarray(Image.open("/Users/Bradley/Videos/New folder/AgBH_cali_5m_13.5kev_2_1961.7s_RH661.032_x0.300_th0.000_5.00s_458795_waxs.tiff"))
+# for numpy file all backslashes turned in forward slashes
+imgplot = plt.imshow(img2)
+
+
+
+#CELL 11
+print(repr(img2)) #Each inner list represents a pixel. Here, with an RGB image, there are 3 values.
+#repr() just gives a printable version of the object (the img2 array in this case)
+print()
+print("array size: "+str(len(img2))) #amount of arrays in the 2D array- which should tell us the pixel amount
+
+
+
+
+#CELL 12
+#"Pseudocolor can be a useful tool for enhancing contrast and visualizing your data more easily. This is especially useful when making presentations of your data using projectors - their contrast is typically quite poor".
+plt.imshow(lum_img2)
+#this is called viridis. It is the basic color map. lum_img2 = img[:, :,] is how it is defined and
+#plt.imshow(lum_img2, cmap="viridis") is its code
+
+
+
+
+#CELL 13
+plt.imshow(lum_img2, cmap="hot")
+
+
+
+
+#CELL 14
+plt.imshow(lum_img2, cmap="nipy_spectral") #this map seems useful as it is the most clear
+
+
+
+#CELL 15
+plt.imshow(lum_img2, cmap="gist_stern")
+
+
+
+
+
+#CELL 16
+#I tried every single pre-defined color map: https://matplotlib.org/stable/tutorials/colors/colormaps.html 
+#Note I didn't try to create my own maps with the array notation.
+#To get a new color from the website, paste defined name between the quotation marks
+
+
+#I am going to make a short tier list of colormaps (maps are unranked within each tier) :)
+
+# Tier 1) You can see the circle so top tier (many of these are under the miscellaneous colormaps)
+#"flag", "gist_earth", "gist_stern", "gnuplot", "jet", "turbo", "nipy_spectral", "gist_ncar"
+
+# Tier 2) Many visible points
+#"pink", "hsv", "tab20", "prism", "terrain"
+
+#Tier 3) Points are mostly visible but less than Tier 2
+#"PiYG", "PRGn", "BrBG", "PuOr", "RdGy", "RdBu", "RdYlBu","RdYlGn", "Spectral", "coolwarm"
+
+
+
+#The best two are "flag", "gist_stern". I will use "gist_stern" in the future since the map colors don't vary much, compared to flag.
+
+
+
+
+
+#CELL 17
+plt.imshow(lum_img2, cmap="flag")
+plt.colorbar() #the colorbar on the side has little meaning since the colors aren't dependent on scalar values of the image brightness. As shown on the bar, the same colors are repeated many times, so you can't tell their strength
+
+
+
+
+
+#CELL 18
+plt.imshow(lum_img2, cmap="gist_stern")
+plt.colorbar(label="scalarized point brightness") #tells you the "strength" of the image at this point 
+
+
+
+
+#CELL 19
+#we want to analyze a specific region of our plot.
+#We want to enhance the contrast in the image, or expand the contrast in a particular region 
+#while sacrificing the detail in colors that don't vary much, or don't matter.
+
+
+
+
+#CELL 20
+plt.hist(lum_img2.ravel(), bins=range(256), fc='k', ec='k')
+#if you make the bins=range(500) then which value is maximum on the histogram changes?
+#Also, a bin is just a way of dividing up histogram data
+
+
+
+
+#CELL 21
+#We want to zoom in on a specific peak
+#Clim is the colormap limits you want to analyze in between.
+plt.imshow(lum_img2,cmap="gist_stern",clim=(240,256))
+
+
+
+
+#CELL 22
+#Image interpolation scheme (we lose information since the pixel number needed changes when resizing images, 
+#but we want the same information)
+
+
+
+
+#CELL 23
+img = Image.open("/Users/Bradley/Videos/New folder/AgBH_cali_5m_13.5kev_2_1961.7s_RH661.032_x0.300_th0.000_5.00s_458795_waxs.tiff")
+img.thumbnail((210, 210))  # resizes image in-place. I manually found 210 to be best.
+imgplot = plt.imshow(img)
+
+
+
+#CELL 24
+imgplot = plt.imshow(img, interpolation="bilinear")
+
+
+
+#CELL 25
+imgplot = plt.imshow(img, interpolation="bicubic")
+
+
+
+
+
+#line cut of the image- vertically and horizontally is next...
