@@ -1,1 +1,40 @@
+#CELL 1
+import matplotlib.pyplot as plt
+import numpy as np
+from PIL import Image
 
+from numpy import unravel_index
+
+
+
+#CELL 2
+img = Image.open(r"C:\Users\Bradley\Videos\New folder\AgBH_cali_5m_13.5kev_2_1961.7s_RH661.032_x0.300_th0.000_5.00s_458795_waxs.tiff") #one of the given files
+#for the image you just insert the file path. On Windows 10 this is found by left clicking once on an image and then going above it and finding where it says "copy path"
+#take the path and insert it (with the quotations included) after r into the Image.open(r) function
+img1 = img.convert('I') # 'I' : 32-bit integer pixels
+img1.show()
+
+data = ( np.copy( np.asarray(img1) ) ).astype(float) #I am unsure what data is actually getting and what the peaks are
+plt.imshow(data)
+plt.plot(data[0,:])
+
+
+#CELL 3
+smallest_num=2.2250738585072014*10**(-306) #2.2250738585072014*10**(-308) is the smallest positive number in python by I will just increase this number by 100 times. 
+#I don't want for the logarithm to have issue computing with a number so close to the minnimum.
+data_log = np.log10(data+2+smallest_num) #np.min(img)=-2 so the lowest data point in the image (the 2d array representing the image values) is -2. 
+#log base 10 has domain: x>0 for x in R so we want to add over 2 in order to plot. 
+#I will go as close to 2 as possbile to minnimize the amount the graph is transformed from the orginal 
+#(which we had certain values we couldn't plot so the whole thing wouldn't plot).
+
+
+
+#CELL 4
+plt.imshow(data_log) #this graph seems to have no use. This being said, I am not sure so this code is being left
+
+
+
+
+
+#CELL 5
+plt.plot(data_log[0,:])
